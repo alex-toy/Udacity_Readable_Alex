@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import  { addPost, addCategory } from '../actions/actions'
-
 
 
 
@@ -24,7 +22,7 @@ class SelectSortMethod extends Component {
     return (
 	
 		<div className="AddPostForm">
-    	<form onSubmit={(e) => this.handleSelectSortMethod(e)} className='create-contact-form'>
+    	<form onSubmit={(e) => this.handleSelectSortMethod(e)} >
 		<label>Choose the sort method : </label>
 		  <div className='create-contact-details'>
 			<select className='postInput' name='category' onChange={(e) => this.handleSelectSortMethod(e)}>
@@ -59,22 +57,8 @@ function mapStateToProps ({
 
 
 
-const mapDispatchToProps = dispatch => ({
-	
-	AddPost: (newtitle, newauthor, newbody, newcategory) => {
-  		dispatch(addPost ({ newid : 'uguyfgou7667554', newtitle : newtitle, newauthor : newauthor, newbody : newbody, newcategory : newcategory }))
-	},
-	
-	addCategory: (name, path) => { dispatch(addCategory({ name : name, path : path })) }
-	
-	
-});
-
-
-
-
 export default connect(
-  mapStateToProps, mapDispatchToProps
+  mapStateToProps
 )(SelectSortMethod)
 
 
