@@ -1,4 +1,16 @@
-export const ADD_CATEGORY = 'ADD_CATEGORY'
+import { 
+	ADD_CATEGORY,
+	ADD_POST,
+	CHANGE_POST,
+	REMOVE_POST,
+	ADD_COMMENT,
+	REMOVE_COMMENT,
+	CHANGE_COMMENT,
+} from './types';
+
+
+
+
 export function addCategory ({ name, path }) {
   return {
     type: ADD_CATEGORY,
@@ -8,7 +20,7 @@ export function addCategory ({ name, path }) {
 }
 
 
-export const ADD_POST = 'ADD_POST'
+
 export function addPost ({ newid, newtitle, newauthor, newbody, newcategory, timestamp, voteScore }) {
   return {
     type: ADD_POST,
@@ -23,7 +35,8 @@ export function addPost ({ newid, newtitle, newauthor, newbody, newcategory, tim
 }
 
 
-export const CHANGE_POST = 'CHANGE_POST'
+
+
 export function changePost ({ id, param, newValue }) {
   return {
     type : CHANGE_POST, 
@@ -34,7 +47,8 @@ export function changePost ({ id, param, newValue }) {
 }
 
 
-export const REMOVE_POST = 'REMOVE_POST'
+
+
 export function removePost ({ id }) {
   return {
     type : REMOVE_POST, 
@@ -44,7 +58,8 @@ export function removePost ({ id }) {
 
 
 
-export const ADD_COMMENT = 'ADD_COMMENT'
+
+
 export function addComment ({ newid, newparentId, newauthor, newscore, newbody, timestamp }) {
   return {
     type: ADD_COMMENT,
@@ -60,7 +75,7 @@ export function addComment ({ newid, newparentId, newauthor, newscore, newbody, 
 
 
 
-export const CHANGE_COMMENT = 'CHANGE_COMMENT'
+
 export function changeComment ({ id, param, newValue }) {
   return {
     type: CHANGE_COMMENT,
@@ -72,6 +87,12 @@ export function changeComment ({ id, param, newValue }) {
 
 
 
+export function removeComment ({ id }) {
+  return {
+    type : REMOVE_COMMENT, 
+    id
+  }
+}
 
 
 

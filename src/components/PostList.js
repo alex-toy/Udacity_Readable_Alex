@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
-import { Button } from 'reactstrap';
 import { connect } from 'react-redux'
-import serializeForm from 'form-serialize'
 
 import  { addComment, removePost } from '../actions/actions'
-import { Link } from "react-router-dom"
 import SelectSortMethod from './SelectSortMethod'
-import VoteScoreForm from './VoteScoreForm'
 import AddPostModal from './AddPostModal'
-import Modal from 'react-modal'
 
- Modal.setAppElement('body');
+import PostItem from './PostItem';
+
 
 class PostList extends Component {
 
@@ -22,34 +18,6 @@ class PostList extends Component {
 
 	
 	
-	storeComment = (data) => {
-		fetch('http://localhost:3001/comments', {
-  			headers: { 
-  				'Accept' : 'application/json',
-  				'Authorization': 'whatever-you-want',
-  				'Content-Type' : 'application/json' 
-  			},
-  			method: "POST",
-  			body: data
-		})
-	}
-	
-	
-	
-	handleSubmit = (e, postId) => {
-		e.preventDefault()
-		const values = Object.assign( {}, serializeForm(e.target, { hash: true }), postId )
-		this.storeComment({
-			id: '786565484',
-			timestamp: Date.now(),
-			body: values.body,
-			author: values.author,
-			parentId: values.key
-		})
-		this.props.AddComment(values.key, values.author, values.body)
-	}
-	
-
 	
 	handleSelectSortMethod = (e) => {
 		
@@ -66,14 +34,14 @@ class PostList extends Component {
   				'Content-Type' : 'application/json' 
 			},
 			method: "DELETE",
-		 }
-		).then( rep => console.log(rep) )
+		 })
+		 .then( rep => rep.json() )
+		 .then( data => this.props.RemovePost(data.id) )
 	}
 	
 	
 	handleDeletePost = (id_post) => {
 		this.DeletePost(id_post)
-		this.props.RemovePost(id_post)
 	}
 	
 	
@@ -96,11 +64,12 @@ class PostList extends Component {
   render() {
     
     
-    const {posts} = this.props
+    const {posts, comments} = this.props
     const {sortmethod} = this.state
     
   	var arrayposts = Object.entries(posts)
   	var sortedposts
+  	
   	
   	if(sortmethod === "voteScore"){
   	
@@ -132,31 +101,28 @@ class PostList extends Component {
     	
     	
     	<ul>{sortedposts.map((id_post) => 
-    		<div className="post" key={id_post[0]}>
+    		
 
     		<li key={id_post[0]}> 
-    			title : {id_post[1].title} <br/> 
-    			body : {id_post[1].body} <br/>
-    			author : {id_post[1].author} <br/> 
-    			category : {id_post[1].category} <br/>
-    			Posted on {this.formattedPostdate(id_post[1].timestamp)} <br/>
     			
-    			<VoteScoreForm postId={id_post[0]} voteScore={id_post[1].voteScore} /><br/> 
-    			
-				
-				<Button onClick={() => this.handleDeletePost(id_post[0])} color="danger">Delete Post</Button>
-				
-				
-                <button color="primary">               
-                	<Link to={'/posts/' + id_post[0]}>See that post</Link>
-                </button>
+                
+                <PostItem 
+    				title = {id_post[1].title}
+    				body = {id_post[1].body}
+    				author = {id_post[1].author}
+    				category = {id_post[1].category}
+    				posted_on = {this.formattedPostdate(id_post[1].timestamp)}
+    				number_of_comments = {Object.keys(comments).filter( key => comments[key].parentId === id_post[0] ).length}
+    				postId={id_post[0]} 
+    				voteScore={id_post[1].voteScore}
+    			/><br />
                 
 
     		</li>
     		
     		
 
-    		</div>)}
+    		)}
     	</ul>
     	
     	

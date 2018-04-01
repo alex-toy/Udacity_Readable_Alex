@@ -13,7 +13,6 @@ import thunk from 'redux-thunk';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-
 const logger = store => next => action => {
   console.group(action.type)
   console.info('dispatching', action)
@@ -50,3 +49,21 @@ ReactDOM.render(
   document.getElementById('root')
 )
 registerServiceWorker()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

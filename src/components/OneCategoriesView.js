@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import  { removePost } from '../actions/actions'
+import PostItem from './PostItem';
 
-import AllCategoriesView from './AllCategoriesView'
+
 
 
 class OneCategoriesView extends Component {
@@ -20,35 +23,64 @@ class OneCategoriesView extends Component {
 	}
 	
 	
+	DeletePost = (id_post) => {
+		fetch( 
+			'http://localhost:3001/posts/' + id_post, 
+			{ headers: { 
+				'Accept' : 'application/json',
+  				'Authorization': 'whatever-you-want',
+  				'Content-Type' : 'application/json' 
+			},
+			method: "DELETE",
+		 })
+		 .then( rep => rep.json() )
+		 .then( data => this.props.RemovePost(data.id) )
+	}
+	
+	
+	handleDeletePost = (id_post) => {
+		fetch( 
+			'http://localhost:3001/posts/' + id_post, 
+			{ headers: { 
+				'Accept' : 'application/json',
+  				'Authorization': 'whatever-you-want',
+  				'Content-Type' : 'application/json' 
+			},
+			method: "DELETE",
+		 })
+		 .then( rep => rep.json() )
+		 .then( data => this.props.RemovePost(data.id) )
+	}
+	
+	
 	
   
   render() {
     
     
-    const {arraycat, arrayposts, choicecat} = this.props
+    const {posts, choicecat, comments} = this.props
+  	var arrayposts = Object.entries(posts).filter( id_post => id_post[1].category === choicecat)
+    
+    
   	
-  	if(choicecat === "react" || choicecat === "redux" || choicecat === "udacity"){
+  	if(arrayposts.length !== 0){
   	
 		return (
-	  
-				<div>
-				
-					<ul>{arrayposts.filter( post => post.category === choicecat).map((post) => 
-						<div className="post" key={post.id}>
-						<li key={post.id}> 
-				
-							Title : {post.title} <br />
-							Author : {post.author} <br />
-							Body : {post.body} <br />
-							Category : {post.category}<br />
-							Score : {post.voteScore}<br />
-							Posted on {this.formattedPostdate(post.timestamp)} <br/>
-
-						</li></div>)}
+					<ul>{arrayposts.map((id_post) => 
+						
+						
+						<PostItem 
+							key={id_post[0]}
+							title = {id_post[1].title}
+							body = {id_post[1].body}
+							author = {id_post[1].author}
+							category = {id_post[1].category}
+							posted_on = {this.formattedPostdate(id_post[1].timestamp)}
+							number_of_comments = {Object.keys(comments).filter( key => comments[key].parentId === id_post[0] ).length}
+							postId={id_post[0]} 
+							voteScore={id_post[1].voteScore}
+						/>)}
 					</ul>
-					
-				
-				</div>
 		)
 	}else{
 	return (
@@ -56,21 +88,11 @@ class OneCategoriesView extends Component {
 				<div className="CategoriesView">
 				
 				
-					<AllCategoriesView arraycat={arraycat} arrayposts={arrayposts} />
+					Sorry, no post in that category
 				
 				
 				</div>
-		)
-	
-	}
-	
-	
-	
-	
-	
-	
-	
-	
+		)}
 	
 	
   }
@@ -80,10 +102,38 @@ class OneCategoriesView extends Component {
 
 
 
+function mapStateToProps ({
+	posts,
+	comments,
+	categories
+}) {
+  
+  return {
+  
+  	posts,
+	comments,
+	categories
+  
+  }
+}
+
+
+const mapDispatchToProps = dispatch => ({
+	
+	
+	RemovePost: (id) => { 
+  		
+  		dispatch(removePost({ id : id }))
+	}
+	
+
+});
 
 
 
-export default OneCategoriesView
+export default connect(
+  mapStateToProps, mapDispatchToProps
+)(OneCategoriesView)
 
 
 

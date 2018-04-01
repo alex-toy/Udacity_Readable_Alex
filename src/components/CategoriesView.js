@@ -15,16 +15,13 @@ class CategoriesView extends Component {
   render() {
 	
     
-    const {posts, categories, choicecat} = this.props
-  	
-  	var arraycat = Object.values(categories).concat({name: "all", path: "all"})
-  	var arrayposts = Object.values(posts)
+    const {choicecat} = this.props
   	
   	
     return (
     <div>
 
-    	<OneCategoriesView choicecat={choicecat} arraycat={arraycat} arrayposts={arrayposts} />
+    	<OneCategoriesView choicecat={choicecat} />
     	
 	</div>
         

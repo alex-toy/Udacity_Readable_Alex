@@ -1,66 +1,69 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import serializeForm from 'form-serialize'
 
-import  { addComment } from '../actions/actions'
-import { Route, Link } from "react-router-dom";
+import  { addComment, removePost } from '../actions/actions'
 
-import CommentList from './CommentList'
-import AddCommentForm from './AddCommentForm'
-
+import {Card, CardTitle, CardText} from 'material-ui/Card'
+import { Button } from 'reactstrap';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import VoteScoreForm from './VoteScoreForm'
+import EditPostModal from './EditPostModal'
 
 
 class PostItem extends Component {
 
+
+	DeletePost = (id_post) => {
+		fetch( 
+			'http://localhost:3001/posts/' + id_post, 
+			{ headers: { 
+				'Accept' : 'application/json',
+  				'Authorization': 'whatever-you-want',
+  				'Content-Type' : 'application/json' 
+			},
+			method: "DELETE",
+		 })
+		 .then( rep => rep.json() )
+		 .then( data => this.props.RemovePost(data.id) )
+	}
+	
+	
+	handleDeletePost = (id_post) => {
+		this.DeletePost(id_post)
+	}
 	
   
   render() {
     
     
-    const {posts, key} = this.props
+    const {title, body, author, category, posted_on, number_of_comments, voteScore, postId} = this.props
   	
-  	var arrayposts = Object.keys(posts)
   	
     return (
-      <div>
+	<MuiThemeProvider>
+    <Card>
 		
-    	
-    	
-    		<li key={posts[key].id}> 
-    			title : {posts[key].title} <br/> 
-    			body : {posts[key].body} <br/>
-    			author : {posts[key].author} <br/> 
-    			category : {posts[key].category} <br/> 
-    			id : {key}
+		<CardTitle title={title} subtitle={'By ' + author + ' on ' + posted_on + ' ; Category :  ' + category} />
+		<CardTitle subtitle={'number of comments : ' + number_of_comments} />
+		
+		<CardText color="blue">
+      		{body}
+		</CardText>
+		
+		
+		<VoteScoreForm postId={postId} voteScore={voteScore} />
     			
-    			<CommentList postId={key} />
-    			
-    			
-    			<AddCommentForm key={key} />
-    			
+		<EditPostModal postId={postId} />
+		
+		
+		<Button onClick={() => this.handleDeletePost(postId)} color="danger">Delete Post</Button>
                 
-                <form onSubmit={(e) => this.handleSubmit(e, {key})} className='create-contact-form'>
-				  
-				  <div className='create-contact-details'>
-					<input type='text' name='author' placeholder='author'/>
-					<input type='text' name='body' placeholder='body'/>
-					<button>Add comment</button>
-				  </div>
-				</form>
-                
-                
-				
-				<Link
-				
-					to='/post'
-				>See that post</Link>
-				
-
-    		</li>
-    	
-    	
         
-	</div>
+        <Button color="primary" href={'/'+ category +'/' + postId}>See that post</Button>
+        
+		
+	</Card>  
+    </MuiThemeProvider>
         
     )
   }
@@ -84,14 +87,22 @@ function mapStateToProps ({
 }
 
 
-
-
+ 
 const mapDispatchToProps = dispatch => ({
 	
 	AddComment: (newparentId, newauthor, newbody) => { 
   		
   		dispatch(addComment({ newid : 876654, newparentId : newparentId, newauthor : newauthor, newbody : newbody }))
+	},
+	
+	
+	RemovePost: (id) => { 
+  		
+  		dispatch(removePost({ id : id }))
 	}
+	
+	
+	
 	
 });
 

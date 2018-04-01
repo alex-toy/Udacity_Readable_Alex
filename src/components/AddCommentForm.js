@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import serializeForm from 'form-serialize'
-
+import { Button } from 'reactstrap';
 import  { addComment } from '../actions/actions'
-
+import headers from '../helper/config'
 
 
 
@@ -16,11 +16,7 @@ class AddCommentForm extends Component {
 	
 	storeComment = (data) => {
 		fetch('http://localhost:3001/comments', {
-  			headers: { 
-  				'Accept' : 'application/json',
-  				'Authorization': 'whatever-you-want',
-  				'Content-Type' : 'application/json' 
-  			},
+  			headers: headers,
   			method: "POST",
   			body: JSON.stringify(data)
 		})
@@ -64,7 +60,7 @@ class AddCommentForm extends Component {
 				  <div className='create-contact-details'>
 					<input className='commentInput' type='text' name='author' placeholder='author'/><br />
 					<input className='commentInput' type='text' name='body' placeholder='body'/><br />
-					<button className='commentInputButton'>Add comment</button>
+					<Button color="primary">Add comment</Button>
 				  </div>
 		</form>
     </div>

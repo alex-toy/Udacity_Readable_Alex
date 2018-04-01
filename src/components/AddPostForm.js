@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import serializeForm from 'form-serialize'
+import headers from '../helper/config'
 
 import  { addPost, addCategory } from '../actions/actions'
 
@@ -14,11 +15,7 @@ class AddPostForm extends Component {
 	
 	storePosts = (data) => {
 		fetch('http://localhost:3001/posts', {
-  			headers: { 
-  				'Accept' : 'application/json',
-  				'Authorization': 'whatever-you-want',
-  				'Content-Type' : 'application/json'
-  			},
+  			headers: headers,
   			method: "POST",
   			body: JSON.stringify(data)
 		})
@@ -51,7 +48,7 @@ class AddPostForm extends Component {
 	fetchCategories = () => {
 		fetch( 
 			'http://localhost:3001/categories', { 
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: headers,
 			method: "GET"
 		}
 		).then( rep => rep.json()).then( data => {
@@ -91,7 +88,11 @@ class AddPostForm extends Component {
 		  <div className='create-contact-details'>
 		  	<input className='postInput' type='text' name='title' placeholder='title'/><br />
 			<input className='postInput'  type='text' name='author' placeholder='author'/><br />
-			<input className='postInput'  type='text' name='body' placeholder='body'/><br />
+			<textarea 
+				name="body"
+   				rows="10" cols="50"
+  				placeholder='body'
+			/><br />
 			<select className='postInput' name='category'> {listcategories} </select><br />
 			<button className='postInputButton'>Add post</button>
 		  </div>

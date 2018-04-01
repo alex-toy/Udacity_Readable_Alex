@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
+import { Button } from 'reactstrap';
 import  { changeComment } from '../actions/actions'
 
 
@@ -89,11 +89,11 @@ class VoteScoreForm extends Component {
     return (
           
 		<div className="encart" style={{width:250}}>
-			<button type="button" onClick={() => this.handleIncreaseScore(commentId)}>Increase</button>
+			<Button type="button" onClick={() => this.handleIncreaseScore(commentId)}>+</Button>
 			
 				Score : {this.props.voteScore}
 			
-			<button type="button" onClick={() => this.handleDecreaseScore(commentId)}>Decrease</button>
+			<Button type="button" onClick={() => this.handleDecreaseScore(commentId)}>-</Button>
 			
 			
 		</div>

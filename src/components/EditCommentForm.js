@@ -2,23 +2,23 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import serializeForm from 'form-serialize'
 import headers from '../helper/config'
-import  { changePost } from '../actions/actions'
+import  { changeComment } from '../actions/actions'
 
 
 
 
 
-class EditPostForm extends Component {
+class EditCommentForm extends Component {
 
 	
-	editPost = (id, data) => {
-		fetch('http://localhost:3001/posts/' + id, {
+	editComment = (id, data) => {
+		fetch('http://localhost:3001/comments/' + id, {
   			headers: headers,
   			method: "PUT",
   			body: JSON.stringify(data)
 		})
 		.then( rep => rep.json())
-		.then( data => this.props.UpdatePost(data.id, data.title, data.body))
+		.then( data => this.props.UpdateComment(data.id, data.body, data.timestamp))
 		.catch(error =>  console.log(error));
 	}
 	
@@ -27,9 +27,10 @@ class EditPostForm extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault()
 		const values = serializeForm(e.target, { hash: true })
-		this.editPost(this.props.postId, {
-			title: values.title,
-			body: values.body,
+		var now = Date.now()
+		this.editComment(this.props.commentId, {
+			body : values.body,
+			timestamp : now
 		})
 		
 	}
@@ -39,22 +40,16 @@ class EditPostForm extends Component {
   
   render() {
   
-	const { posts } = this.props
-	console.log(posts[this.props.postId])
+	const { comments } = this.props
     
     return (
 	
 		<div className="AddPostForm">
     	<form onSubmit={(e) => this.handleSubmit(e)} className='create-contact-form'>
-		<label>Edit that post</label>
+		<label>Edit that comment</label>
 		  <div className='create-contact-details'>
-		  	<input className='postInput' type='text' name='title' placeholder={posts[this.props.postId].title}/><br />
-			<textarea 
-				name="body"
-   				rows="10" cols="50"
-  				placeholder={posts[this.props.postId].body}
-			/><br />
-			<button className='postInputButton'>Edit post</button>
+			<input className='postInput'  type='text' name='body' placeholder={comments[this.props.commentId].body}/><br />
+			<button className='postInputButton'>Edit comment</button>
 		  </div>
 		</form>
     	</div>
@@ -85,9 +80,9 @@ function mapStateToProps ({
 
 const mapDispatchToProps = dispatch => ({
 	
-	UpdatePost: (id, newtitle, newbody) => {
-  		dispatch(changePost ({ id : id, param : 'title', newValue : newtitle}))
-  		dispatch(changePost ({ id : id, param : 'body', newValue : newbody}))
+	UpdateComment: (id, newbody, time) => {
+  		dispatch(changeComment ({ id : id, param : 'body', newValue : newbody}))
+  		dispatch(changeComment ({ id : id, param : 'timestamp', newValue : time}))
 	}
 	
 });
@@ -98,7 +93,7 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(
   mapStateToProps, mapDispatchToProps
-)(EditPostForm)
+)(EditCommentForm)
 
 
 

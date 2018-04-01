@@ -5,11 +5,13 @@ import serializeForm from 'form-serialize'
 import  { addComment, removePost } from '../actions/actions'
 import CommentList from './CommentList'
 import VoteScoreForm from './VoteScoreForm'
-import EditPostForm from './EditPostForm'
 import AddCommentModal from './AddCommentModal'
+import EditPostModal from './EditPostModal'
+import Prompt from './Prompt'
 
 import { Button } from 'reactstrap';
-
+import {Card, CardTitle, CardText} from 'material-ui/Card'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 
 class PostList extends Component {
@@ -98,41 +100,72 @@ class PostList extends Component {
     
   	var arrayposts = Object.entries(posts).filter( id_post => id_post[0].toString() ===  postId.toString())
   	
-  	
-    return (
+  	if(arrayposts.length !== 0){
+  	return (
       <div>
       
     	
     	<ul>{arrayposts.map((id_post) => 
-    		<div className="post" key={id_post[0]}>
+    		
 
-    		<li key={id_post[0]}> 
-    			title : {id_post[1].title} <br/> 
-    			body : {id_post[1].body} <br/>
-    			author : {id_post[1].author} <br/> 
-    			category : {id_post[1].category} <br/>
-    			Posted on {this.formattedPostdate(id_post[1].timestamp)} <br/>
-    			
-    			<VoteScoreForm postId={id_post[0]} voteScore={id_post[1].voteScore} /><br/> 
-    			<EditPostForm postId={id_post[0]} /><br/> 
+    		<li key={id_post[0]}>
+    		
+    		
+    		
+    		
+    		
+    		
+    		 <div className="post">
+    		 
+    		
+    			<MuiThemeProvider>
+				<Card>
+		
+					<CardTitle title={id_post[1].title} subtitle={'by ' + id_post[1].author + ' on ' + this.formattedPostdate(id_post[1].timestamp) + ' ; Category :  ' + id_post[1].category} />
+		
+					<CardText color="blue">
+						{id_post[1].body}
+					</CardText>
+		
+		
+					<VoteScoreForm postId={postId} voteScore={id_post[1].voteScore} />
 				
-				<Button onClick={() => this.handleDeletePost(id_post[0])} color="danger">Delete Post</Button>
+					<EditPostModal postId={id_post[0]} />
+		
+		
+					<Button onClick={() => this.handleDeletePost(id_post[0])} color="danger">Delete Post</Button>
+				
+				</Card>  
+				</MuiThemeProvider>
+				
 				
 				<CommentList postId={id_post[0]} />
 				
 				
 				<AddCommentModal postId={id_post[0]} />
 				
-
+			</div>
     		</li>
     		
 
-    		</div>)}
+    		)}
     	</ul>
     	 
 	</div>
         
     )
+  	} else {
+  	return (
+      <div>
+      
+    	<Prompt />
+    	Sorry, that post doesnt exist
+    		
+	</div>
+        
+    )
+  	}
+  	
   }
 }
 

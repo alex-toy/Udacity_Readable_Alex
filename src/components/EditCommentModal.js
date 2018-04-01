@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
-import AddPostForm from './AddPostForm'
-import { Button } from 'reactstrap'
+import { Button } from 'reactstrap';
+import EditCommentForm from './EditCommentForm'
 
 const customStyles = {
   content : {
@@ -16,9 +16,10 @@ const customStyles = {
 };
 
 
-Modal.setAppElement('#root')
 
-class AddPostModal extends React.Component {
+
+
+class EditCommentModal extends React.Component {
   constructor() {
     super();
 
@@ -41,18 +42,20 @@ class AddPostModal extends React.Component {
   }
 
   render() {
+  
+  
     return (
-      <div className="AddPostForm">
-        <Button color="primary" onClick={this.openModal}>Add post</Button>
+      <div>
+        <Button color="primary" onClick={this.openModal}>Edit comment</Button>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           style={customStyles}
-          contentLabel="Modal"
+          contentLabel="Example Modal"
         >
 
-          <AddPostForm />
+          <EditCommentForm commentId={this.props.commentId} /><br/> 
           
           
           
@@ -62,7 +65,7 @@ class AddPostModal extends React.Component {
   }
 }
 
-export default AddPostModal
+export default EditCommentModal
 
 
 

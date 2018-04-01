@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import AddCommentForm from './AddCommentForm'
+import { Button } from 'reactstrap'
 
 const customStyles = {
   content : {
@@ -42,7 +43,7 @@ class AddCommentModal extends React.Component {
   render() {
     return (
       <div className="AddPostForm">
-        <button onClick={this.openModal}>Add a comment</button>
+        <Button color="primary" onClick={this.openModal}>Add a comment</Button>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import VoteCommentForm from './VoteCommentForm'
+import  { removeComment } from '../actions/actions'
+import CommentItem from './CommentItem'
+
+
 
 
 
@@ -22,6 +25,27 @@ class CommentList extends Component {
   }
   
   
+  DeleteComment = (id_post) => {
+		fetch( 
+			'http://localhost:3001/comments/' + id_post, 
+			{ headers: { 
+				'Accept' : 'application/json',
+  				'Authorization': 'whatever-you-want',
+  				'Content-Type' : 'application/json' 
+			},
+			method: "DELETE",
+		 })
+		 .then( rep => rep.json() )
+		 .then( data => this.props.RemoveComment(data.id) )
+	}
+	
+	
+	handleDeleteComment = (id_post) => {
+		this.DeleteComment(id_post)
+	}
+	
+  
+  
   
   render() {
     
@@ -34,8 +58,6 @@ class CommentList extends Component {
   	var commentArray = Object.keys(comments).filter( key => comments[key].parentId === postId )
   	
   	
-  	
-    
     return (
 	<div>
 		
@@ -43,15 +65,20 @@ class CommentList extends Component {
     	
     	<ol>{commentArray.map((key) => 
     	
-    		<div key={key}  className="comment">
-    		<li key={key} > 
-    			Author : {comments[key].author} <br/>
-    			Body : {comments[key].body} <br/>
-    			posted on {this.formattedPostdate(comments[key].timestamp)} <br/>
+    		
+    		<li key={key} >
+    		
+    			<CommentItem 
+    				author = {comments[key].author}
+    				body = {comments[key].body}
+    				last_modification_on = {this.formattedPostdate(comments[key].timestamp)}
+    				commentId={key}
+    				voteScore={comments[key].voteScore}
+    			/><br />
     			
-    			<VoteCommentForm commentId={key} voteScore={comments[key].voteScore} /><br/> 
+    			
         
-    		</li></div>)}
+    		</li>)}
     		
     		
     		
@@ -85,8 +112,23 @@ function mapStateToProps ({
 }
 
 
+
+const mapDispatchToProps = dispatch => ({
+	
+	
+	RemoveComment: (id) => { 
+  		
+  		dispatch(removeComment({ id : id }))
+	}
+	
+	
+	
+	
+});
+
+
 export default connect(
-  mapStateToProps
+  mapStateToProps, mapDispatchToProps
 )(CommentList)
 
 

@@ -55,9 +55,9 @@ const Params = () => (
       <Route path="/category/:cat" component={Child} />
       
       
-      <Route exact path="/posts/:id" component={post} />
-       
-      
+		<Route exact path="/react/:id" component={post} />
+    	<Route exact path="/redux/:id" component={post} />
+		<Route exact path="/udacity/:id" component={post} />
 
 
     </div>
